@@ -7,10 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 
+import { useEffect, useState } from "react";
+
 import { useStore } from "@/store";
 
 import FieldHandler from "../handlers/FieldHandler";
-import { useEffect, useState } from "react";
 
 const FieldsPresenter = () => {
   const { fields } = useStore();
@@ -58,7 +59,7 @@ const FieldsPresenter = () => {
         </Button>
       </Grid>
       {fields.value.map((field) => (
-        <Grid key={field.uuid} item xs={6}>
+        <Grid key={field.uuid} item xs={12} md={6} lg={4}>
           <FieldHandler
             key={field.uuid}
             field={field}
