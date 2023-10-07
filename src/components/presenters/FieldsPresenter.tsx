@@ -3,6 +3,8 @@ import {
   Button,
   Card,
   CardContent,
+  Dialog,
+  DialogContent,
   Grid,
   Typography,
 } from "@mui/material";
@@ -12,9 +14,11 @@ import { useEffect, useState } from "react";
 import { useStore } from "@/store";
 
 import FieldHandler from "../handlers/FieldHandler";
+import NewFieldHandler from "../handlers/NewFieldHandler";
 
 const FieldsPresenter = () => {
   const { fields } = useStore();
+  const [newEntry, setNewEntry] = useState(false);
   const [isEditing, setEditing] = useState(false);
 
   useEffect(() => {
@@ -47,12 +51,10 @@ const FieldsPresenter = () => {
           Ctrl + V or
         </Typography>
         <Button
-          onClick={() =>
-            fields.methods.save({
-              label: "Entry",
-              value: "",
-            })
-          }
+          onClick={() => {
+            setNewEntry(true);
+            setEditing(true);
+          }}
           variant="outlined"
         >
           New entry
@@ -76,6 +78,28 @@ const FieldsPresenter = () => {
           </Card>
         </Grid>
       ) : null}
+      <Dialog
+        open={newEntry}
+        onClose={() => {
+          setNewEntry(false);
+          setEditing(false);
+        }}
+        maxWidth="xs"
+      >
+        <DialogContent>
+          <NewFieldHandler
+            onCancel={() => {
+              setNewEntry(false);
+              setEditing(false);
+            }}
+            onSubmit={(field) => {
+              fields.methods.save(field);
+              setNewEntry(false);
+              setEditing(false);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </Grid>
   );
 };
