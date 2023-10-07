@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, KeyboardEvent, useState } from "react";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
@@ -17,23 +17,31 @@ const EditableField: FC<Props> = ({
   onCancel,
 }) => {
   const [value, setValue] = useState(initialValue);
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setValue(e.target.value);
   };
 
-  const onConfirm = () => {
-    onEdit(value);
+  const onKeyUp = (e: KeyboardEvent) => {
+    if (e.code === "Escape") {
+      onCancel();
+    }
+    if (e.code === "Enter") {
+      onEdit(value);
+    }
   };
 
   return (
     <TextField
       fullWidth
+      autoFocus
       size="medium"
       label={label}
       variant="outlined"
       value={value}
+      onKeyUp={onKeyUp}
       onChange={handleChange}
       InputProps={{
         endAdornment: (
@@ -41,7 +49,12 @@ const EditableField: FC<Props> = ({
             <IconButton size="small" onClick={onCancel}>
               <ClearIcon />
             </IconButton>
-            <IconButton size="small" onClick={onConfirm}>
+            <IconButton
+              size="small"
+              onClick={() => {
+                onEdit(value);
+              }}
+            >
               <CheckIcon />
             </IconButton>
           </InputAdornment>

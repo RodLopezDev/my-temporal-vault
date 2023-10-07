@@ -1,5 +1,6 @@
 import { FC } from "react";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 
 import CopyButton from "../CopyButton";
@@ -12,7 +13,25 @@ interface Props {
   onEdit?: () => void;
 }
 
+function isURL(str: string) {
+  // Regular expression pattern for a URL
+  const urlPattern = /^(https?:\/\/)?([\w.-]+\.[a-z]{2,})(\/\S*)?$/i;
+
+  // Test the string against the pattern
+  return urlPattern.test(str);
+}
+
 const ReadonlyField: FC<Props> = ({ label, value, onDelete, onEdit }) => {
+  const handleLink = () => {
+    const link = document.createElement("a");
+    link.href = value;
+    link.target = "_blank";
+    link.style.display = "none";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <TextField
       disabled
@@ -43,6 +62,11 @@ const ReadonlyField: FC<Props> = ({ label, value, onDelete, onEdit }) => {
         endAdornment: (
           <InputAdornment position="end">
             <CopyButton value={value} />
+            {isURL(value) ? (
+              <IconButton size="small" onClick={handleLink}>
+                <OpenInNewIcon />
+              </IconButton>
+            ) : null}
           </InputAdornment>
         ),
       }}

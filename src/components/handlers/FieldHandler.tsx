@@ -7,16 +7,27 @@ import EditableField from "../ui/fields/EditableField";
 
 interface Props {
   field: Field;
+  isEditingItem?: (state: boolean) => void;
   edit: (field: Field) => void;
   remove: (uuid: string) => void;
 }
 
-const FieldHandler: FC<Props> = ({ field, edit, remove }) => {
+const FieldHandler: FC<Props> = ({ field, edit, remove, isEditingItem }) => {
   const [isEditing, setEditing] = useState(false);
 
-  const handleEdit = (value: string) => {
+  const handleSubmitEdit = (value: string) => {
     edit({ ...field, value });
     setEditing(false);
+    isEditingItem?.(false);
+  };
+
+  const handleEdit = () => {
+    setEditing(true);
+    isEditingItem?.(true);
+  };
+  const handleCancelEdit = () => {
+    setEditing(false);
+    isEditingItem?.(false);
   };
 
   const handleDelete = () => {
@@ -36,15 +47,15 @@ const FieldHandler: FC<Props> = ({ field, edit, remove }) => {
     <ReadonlyField
       label={field.label}
       value={field.value}
-      onEdit={() => setEditing(true)}
+      onEdit={handleEdit}
       onDelete={handleDelete}
     />
   ) : (
     <EditableField
       label={field.label}
       value={field.value}
-      onCancel={() => setEditing(false)}
-      onEdit={handleEdit}
+      onCancel={handleCancelEdit}
+      onEdit={handleSubmitEdit}
     />
   );
 };

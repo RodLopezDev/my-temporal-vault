@@ -15,44 +15,44 @@ const useCRUDState = function <T>(
   initialState: T[],
   storageKey: string
 ): Result<T> {
-  const [fields, setFields] = useLocalStorageState<T[]>(
+  const [elements, setElements] = useLocalStorageState<T[]>(
     initialState,
     storageKey
   );
 
   const save = useCallback(
     (element: T) => {
-      const newState = [...fields, element];
-      setFields(newState);
+      const newState = [...elements, element];
+      setElements(newState);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [fields]
+    [elements]
   );
 
   const remove = useCallback(
     (key: keyof T, value: string) => {
-      const newState = fields.filter((f) => f[key] !== value);
-      setFields(newState);
+      const newState = elements.filter((f) => f[key] !== value);
+      setElements(newState);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [fields]
+    [elements]
   );
 
   const update = useCallback(
     (element: T, validation: (item: T) => boolean) => {
-      const newState = fields.map((field) => {
+      const newState = elements.map((field) => {
         if (validation(field)) {
           return { ...field, ...element };
         }
         return field;
       });
-      setFields(newState);
+      setElements(newState);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [fields]
+    [elements]
   );
 
-  return [fields, [save, remove, update]];
+  return [elements, [save, remove, update]];
 };
 
 export default useCRUDState;
