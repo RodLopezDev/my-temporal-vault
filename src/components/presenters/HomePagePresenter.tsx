@@ -5,6 +5,7 @@ import DehazeIcon from "@mui/icons-material/Dehaze";
 import { AppBar, Box, Drawer, IconButton, Typography } from "@mui/material";
 
 import { StoreProvider } from "@/store";
+import Spacer from "../ui/Spacer";
 import FieldsPresenter from "./FieldsPresenter";
 
 const HomePagePresenter = () => {
@@ -29,7 +30,12 @@ const HomePagePresenter = () => {
         <Box sx={{ margin: "auto" }} />
       </AppBar>
       <Drawer open={drawer} onClose={() => setDrawer(false)}>
-        <Box sx={(theme) => ({ width: theme.spacing(32) })}></Box>
+        <Box sx={(theme) => ({ width: theme.spacing(32) })}>
+          <Spacer spacing={2} />
+          <Typography sx={{ textAlign: "center" }}>
+            We are working in this!!
+          </Typography>
+        </Box>
       </Drawer>
       <Box sx={(theme) => ({ p: theme.spacing(2) })}>
         <FieldsPresenter />
